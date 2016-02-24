@@ -6,7 +6,8 @@
   "scripts": {
     "test": "mocha tests.js",
     "start": "./bin/www",
-    "typings": "typings"
+    "typings": "typings",
+    "postinstall": "typings install"
   },
   "author": "Jason Melendez <jason.melendez@gmail.com> (https://github.com/deztopia)",
   "license": "ISC",
