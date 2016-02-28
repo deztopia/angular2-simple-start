@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Angular 2 Simple Start</title>
+        <script src="/js/lib.js"></script>
+
+        <!-- 2. Configure SystemJS -->
+        <script>
+            System.config({
+                bundles: {
+                    'js/app.js': ['main']
+                },
+                packages: {
+                    js: {
+                        format: 'register',
+                        defaultExtension: 'js'
+                    }
+                }
+            });
+            System.import('main')
+                    .then(null, console.error.bind(console));
+        </script>
+    </head>
+
+    <body>
+        <my-app>Loading...</my-app>
+    </body>
+</html>

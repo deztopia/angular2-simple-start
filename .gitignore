@@ -1,4 +1,4 @@
 node_modules
-app/dist
+app/dist/js
 typings
 .idea
