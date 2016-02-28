@@ -9,6 +9,7 @@ var tslint = require('gulp-tslint');
 var concat = require('gulp-concat');
 var ts = require('gulp-typescript');
 var uglify = require('gulp-uglify');
+var inlineNg2Template = require('gulp-inline-ng2-template');
 
 var tsProject = ts.createProject('tsconfig.json', { sortOutput: true, outFile: "app.js", typescript: require('typescript') });
 var config = new Config();
@@ -30,6 +31,7 @@ gulp.task('dev:sasstocss', function () {
 
 gulp.task('dev:appts', ['ts-lint'], function() {
     var tsResult = gulp.src(config.allTypeScript) // instead of gulp.src(...)
+        .pipe(inlineNg2Template({ base: '/app/dev' }))
         .pipe(sourcemaps.init())
         .pipe(ts(tsProject));
 
@@ -61,6 +63,7 @@ gulp.task('prod:sasstocss', function () {
 
 gulp.task('prod:appts', ['ts-lint'], function() {
     var tsResult = gulp.src(config.allTypeScript) // instead of gulp.src(...)
+        .pipe(inlineNg2Template({ base: '/app/dev' }))
         .pipe(ts(tsProject));
 
     return tsResult.js
