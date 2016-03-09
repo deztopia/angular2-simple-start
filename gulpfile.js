@@ -17,7 +17,7 @@ var config = new Config();
 // --- DEV: gulp dev --- //
 gulp.task('dev', ['dev:compile', 'dev:lib'], function() {
     gulp.watch(config.allSass, ['dev:sasstocss']);
-    gulp.watch(config.allTypeScript, ['dev:appts']);
+    gulp.watch([config.allTypeScript, config.allHtml], ['dev:appts']);
 });
 
 gulp.task('dev:compile', ['dev:sasstocss', 'dev:appts']);

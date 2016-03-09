@@ -11,6 +11,7 @@ var GulpConfig = (function () {
         ];
         this.tsOutputPath = this.dist + 'js';
 
+        this.allHtml = this.source + '**/*.html';
         this.allSass = this.source + '**/*.scss';
         this.cssOutputPath = this.dist + 'css';
 
