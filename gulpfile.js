@@ -9,29 +9,33 @@ var tslint = require('gulp-tslint');
 var concat = require('gulp-concat');
 var ts = require('gulp-typescript');
 var uglify = require('gulp-uglify');
+var cleanCss = require('gulp-clean-css');
 var inlineNg2Template = require('gulp-inline-ng2-template');
 
 var tsProject = ts.createProject('tsconfig.json', { sortOutput: true, outFile: "app.js", typescript: require('typescript') });
 var config = new Config();
 
 // --- DEV: gulp dev --- //
-gulp.task('dev', ['dev:compile', 'dev:lib'], function() {
-    gulp.watch(config.allSass, ['dev:sasstocss']);
-    gulp.watch([config.allTypeScript, config.allHtml], ['dev:appts']);
+gulp.task('dev', ['dev:compile', 'dev:lib', 'dev:globalsass'], function() {
+    gulp.watch([config.allTypeScript, config.allHtml, config.componentSass], ['dev:appts']);
+    gulp.watch(config.globalSass, ['dev:globalsass']);
 });
 
-gulp.task('dev:compile', ['dev:sasstocss', 'dev:appts']);
+gulp.task('dev:compile', ['dev:appts']);
 
-gulp.task('dev:sasstocss', function () {
-    return gulp.src(config.allSass)
-        .pipe(sass())
-        .pipe(gulp.dest(config.cssOutputPath))
+gulp.task('dev:componentsass', function () {
+    return gulp.src(config.componentSass)
+        .pipe(sass({outputStyle: 'compressed'}))
+        .pipe(cleanCss())
+        .pipe(gulp.dest(function(file) {
+            return file.base; // because of Angular 2's encapsulation, it's natural to save the css where the scss-file was
+        }))
         .on('error', gutil.log);
 });
 
-gulp.task('dev:appts', ['ts-lint'], function() {
+gulp.task('dev:appts', ['dev:componentsass', 'ts-lint'], function() {
     var tsResult = gulp.src(config.allTypeScript) // instead of gulp.src(...)
-        .pipe(inlineNg2Template({ base: '/app/dev' }))
+        .pipe(inlineNg2Template({ base: '/app/dev', useRelativePaths: true }))
         .pipe(sourcemaps.init())
         .pipe(ts(tsProject));
 
@@ -48,22 +52,32 @@ gulp.task('dev:lib', function() {
         .on('err', gutil.log);
 });
 
-
-// --- PROD: gulp prod --- //
-gulp.task('prod', ['prod:compile', 'prod:lib']);
-
-gulp.task('prod:compile', ['prod:sasstocss', 'prod:appts']);
-
-gulp.task('prod:sasstocss', function () {
-    return gulp.src(config.allSass)
-        .pipe(sass({outputStyle: 'compressed'}))
-        .pipe(gulp.dest(config.cssOutputPath))
+gulp.task('dev:globalsass', function() {
+    return gulp.src(config.globalSass)
+        .pipe(sass())
+        .pipe(gulp.dest(config.globalCssOutputPath))
         .on('error', gutil.log);
 });
 
-gulp.task('prod:appts', ['ts-lint'], function() {
+
+// --- PROD: gulp prod --- //
+gulp.task('prod', ['prod:compile', 'prod:lib', 'prod:globalsass']);
+
+gulp.task('prod:compile', ['prod:appts']);
+
+gulp.task('prod:componentsass', function () {
+    return gulp.src(config.componentSass)
+        .pipe(sass({outputStyle: 'compressed'}))
+        .pipe(cleanCss())
+        .pipe(gulp.dest(function(file) {
+            return file.base;
+        }))
+        .on('error', gutil.log);
+});
+
+gulp.task('prod:appts', ['prod:componentsass', 'ts-lint'], function() {
     var tsResult = gulp.src(config.allTypeScript) // instead of gulp.src(...)
-        .pipe(inlineNg2Template({ base: '/app/dev' }))
+        .pipe(inlineNg2Template({ base: '/app/dev', useRelativePaths: true }))
         .pipe(ts(tsProject));
 
     return tsResult.js
@@ -80,6 +94,14 @@ gulp.task('prod:lib', function() {
         .on('err', gutil.log);
 });
 
+gulp.task('prod:globalsass', function() {
+    return gulp.src(config.globalSass)
+        .pipe(sass({outputStyle: 'compressed'}))
+        .pipe(cleanCss())
+        .pipe(gulp.dest(config.globalCssOutputPath))
+        .on('error', gutil.log);
+});
+
 
 // --- UTILS --- //
 gulp.task('ts-lint', function() {
@@ -91,8 +113,9 @@ gulp.task('ts-lint', function() {
 
 gulp.task('clean', function() {
     var directories = [
-        config.cssOutputPath,
-        config.tsOutputPath
+        config.componentCssOutputFiles,
+        config.tsOutputPath,
+        config.globalCssOutputPath
     ];
 
     return gulp.src(directories, {read: false})

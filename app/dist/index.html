@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <base href="/">
         <title>Angular 2 Starter</title>
+        <link rel="stylesheet" type="text/css" href="/css/styles.css">
         <script src="/js/lib.js"></script>
 
         <!-- 2. Configure SystemJS -->
@@ -18,7 +20,7 @@
                 }
             });
             System.import('main')
-                    .then(null, console.error.bind(console));
+                .then(null, console.error.bind(console));
         </script>
     </head>
 

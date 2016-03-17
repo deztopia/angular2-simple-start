@@ -1,0 +1,18 @@
+<div class="container">
+    <div class="row">
+        <div class="col-sm-6">
+            <h2>My Cards</h2>
+            <div class="list-group">
+                <a href="#"
+                   *ngFor="#card of cards"
+                   class="list-group-item"
+                   (click)="onSelect(card)"
+                   [class.active]="card === selectedCard">{{card.name}} of {{card.suit}}</a>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <h3 *ngIf="selectedCard">You selected:</h3>
+            <my-card-summary [card]="selectedCard"></my-card-summary>
+        </div>
+    </div>
+</div>

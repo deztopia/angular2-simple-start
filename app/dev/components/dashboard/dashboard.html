@@ -1,0 +1,9 @@
+<h3>Top Cards</h3>
+
+<div class="container">
+    <div class="row">
+        <div *ngFor="#card of cards" class="col-sm-4">
+            <my-card-summary [card]="card"></my-card-summary>
+        </div>
+    </div>
+</div>

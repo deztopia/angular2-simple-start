@@ -1,0 +1,10 @@
+@import "../global/scss/variables";
+
+.h1 {
+  margin: 20px 0;
+}
+
+// active nav menu item:
+a.nav-link.router-link-active {
+  color: #55595c !important;
+}

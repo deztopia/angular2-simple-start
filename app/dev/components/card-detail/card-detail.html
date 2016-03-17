@@ -1,0 +1,17 @@
+<div *ngIf="card">
+    <h2>{{card.name}} of {{card.suit}} Details</h2>
+
+    <div><label>id: </label>{{card.id}}</div>
+
+    <form>
+        <fieldset class="form-group">
+            <label for="name">Name</label>
+            <input type="text" [(ngModel)]="card.name" class="form-control" id="name" placeholder="Enter name">
+        </fieldset>
+        <fieldset class="form-group">
+            <label for="name">Suit</label>
+            <input type="text" [(ngModel)]="card.suit" placeholder="suit" class="form-control" id="suit" placeholder="Enter suit">
+            <small class="text-muted">Spades, Diamonds, Clubs, or Hearts</small>
+        </fieldset>
+    </form>
+</div>

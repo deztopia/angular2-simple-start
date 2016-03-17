@@ -1,0 +1,8 @@
+<div *ngIf="card" class="card card-inverse card-primary text-xs-center" (click)="gotoCard(card)">
+    <div class="card-block">
+        <blockquote class="card-blockquote">
+            <p>{{card.name}} of {{card.suit}}</p>
+            <footer>Click to edit</footer>
+        </blockquote>
+    </div>
+</div>
